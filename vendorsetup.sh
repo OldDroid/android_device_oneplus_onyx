@@ -1,3 +1,3 @@
-add_lunch_combo aosp_bacon-user
-add_lunch_combo aosp_bacon-userdebug
-add_lunch_combo aosp_bacon-eng
+add_lunch_combo aosp_onyx-user
+add_lunch_combo aosp_onyx-userdebug
+add_lunch_combo aosp_onyx-eng

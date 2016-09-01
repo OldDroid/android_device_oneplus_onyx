@@ -21,22 +21,18 @@ endif
 # Overlays
 DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
 
-# Haters gonna hate..
-PRODUCT_CHARACTERISTICS := nosdcard
-
 # Config scripts
 PRODUCT_PACKAGES += \
     init.qcom.bt.sh
 
 # Ramdisk
 PRODUCT_PACKAGES += \
-    libinit_bacon \
-    fstab.bacon \
-    init.bacon.rc \
+    libinit_onyx \
+    fstab.qcom \
     init.qcom.power.rc \
+    init.qcom.rc \
     init.qcom.usb.rc \
-    init.recovery.qcom.rc \
-    ueventd.bacon.rc
+    ueventd.qcom.rc
 
 # Audio
 PRODUCT_COPY_FILES += \
@@ -83,8 +79,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     audio.offload.pcm.24bit.enable=true
 
 # Bluetooth
-PRODUCT_PROPERTY_OVERRIDES +=
-    bluetooth.hfp.client=1
+PRODUCT_PROPERTY_OVERRIDES += bluetooth.hfp.client=1
 
 # Boot animation
 TARGET_SCREEN_HEIGHT := 1920
@@ -96,19 +91,23 @@ PRODUCT_PACKAGES += \
 
 # Camera
 PRODUCT_PACKAGES += \
-    camera.bacon
+    camera.msm8974 \
+    libboringssl-compat \
+    libstlport \
+    libshim_camera
 
 # Charger
 PRODUCT_PACKAGES += \
     charger_res_images
 
-# Data
-PRODUCT_PACKAGES += \
-    librmnetctl
-
 # Dalvik/HWUI
 $(call inherit-product-if-exists, frameworks/native/build/phone-xhdpi-2048-dalvik-heap.mk)
 $(call inherit-product-if-exists, frameworks/native/build/phone-xhdpi-2048-hwui-memory.mk)
+
+# Data
+PRODUCT_PACKAGES += \
+    librmnetctl \
+    rmnetcli
 
 # Display
 PRODUCT_AAPT_CONFIG := normal
@@ -146,6 +145,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/sec_config:system/etc/sec_config
 
+# Keylayouts
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/keylayout/synaptics-rmi.kl:system/usr/keylayout/synaptics-rmi.kl
+
 # Keystore
 PRODUCT_PACKAGES += \
     keystore.msm8974
@@ -176,25 +179,6 @@ PRODUCT_PACKAGES += \
     libOmxVenc \
     libstagefrighthw
 
-# NFC
-ifeq ($(TARGET_BUILD_VARIANT),user)
-    NFCEE_ACCESS_PATH := $(LOCAL_PATH)/configs/nfcee_access.xml
-else
-    NFCEE_ACCESS_PATH := $(LOCAL_PATH)/configs/nfcee_access_debug.xml
-endif
-PRODUCT_COPY_FILES += \
-    $(NFCEE_ACCESS_PATH):system/etc/nfcee_access.xml
-
-PRODUCT_PACKAGES += \
-    NfcNci \
-    Tag \
-    nfc_nci.bacon \
-    com.android.nfc_extras
-
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/libnfc-nxp.conf:system/etc/libnfc-nxp.conf \
-    $(LOCAL_PATH)/configs/libnfc-brcm.conf:system/etc/libnfc-brcm.conf
-
 # Permissions
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml \
@@ -204,9 +188,6 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.camera.front.xml:system/etc/permissions/android.hardware.camera.front.xml \
     frameworks/native/data/etc/android.hardware.ethernet.xml:system/etc/permissions/android.hardware.ethernet.xml \
     frameworks/native/data/etc/android.hardware.location.gps.xml:system/etc/permissions/android.hardware.location.gps.xml \
-    frameworks/native/data/etc/android.hardware.nfc.xml:system/etc/permissions/android.hardware.nfc.xml \
-    frameworks/native/data/etc/android.hardware.nfc.hce.xml:system/etc/permissions/android.hardware.nfc.hce.xml \
-    frameworks/base/nfc-extras/com.android.nfc_extras.xml:system/etc/permissions/com.android.nfc_extras.xml \
     frameworks/native/data/etc/android.hardware.sensor.accelerometer.xml:system/etc/permissions/android.hardware.sensor.accelerometer.xml \
     frameworks/native/data/etc/android.hardware.sensor.compass.xml:system/etc/permissions/android.hardware.compass.xml \
     frameworks/native/data/etc/android.hardware.sensor.light.xml:system/etc/permissions/android.hardware.sensor.light.xml \
@@ -234,30 +215,22 @@ endif
 
 # Proprietary blobs, not automatically included in AOSP builds
 PRODUCT_PACKAGES += \
+    CNEService \
+    dpmserviceapp \
+    com.qualcomm.location \
     qcrilmsgtunnel \
-    PPPreference \
-    QuickBoot \
     shutdownlistener \
-    TimeService
+    libril
 
 PRODUCT_PACKAGES += \
-    liblisten \
     libmm-abl \
     libtime_genoff \
     libTimeService \
-    libqmi \
-    libmdmdetect \
-    libqmiservices \
-    libidl \
-    libqcci_legacy \
-    libdiag \
-    libqmi_client_qmux \
-    libdsutils \
-    libwpa_qmi_eap_proxy
+    TimeService
 
-# Recovery
-PRODUCT_EXTRA_RECOVERY_KEYS += \
-    $(LOCAL_PATH)/bacon
+# Sensors
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/sensors/sensor_def_qcomdev.conf:system/etc/sensors/sensor_def_qcomdev.conf
 
 # STK
 PRODUCT_PACKAGES += \
@@ -265,7 +238,7 @@ PRODUCT_PACKAGES += \
 
 # Thermal config
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/thermal-engine.conf:system/etc/thermal-engine-8974.conf
+    $(LOCAL_PATH)/configs/thermal-engine-8974.conf:system/etc/thermal-engine-8974.conf
 
 # USB
 PRODUCT_PACKAGES += \
@@ -331,7 +304,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.telephony.default_network=9
 
 # Call the proprietary setup
-$(call inherit-product-if-exists, vendor/oneplus/bacon/bacon-vendor.mk)
+$(call inherit-product-if-exists, vendor/oneplus/onyx/onyx-vendor.mk)
 
 ifneq ($(QCPATH),)
 $(call inherit-product-if-exists, $(QCPATH)/prebuilt_HY11/target/product/msm8974/prebuilt.mk)

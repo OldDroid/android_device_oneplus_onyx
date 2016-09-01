@@ -1,6 +1,5 @@
 /*
-   Copyright (c) 2014, The CyanogenMod Project
-
+   Copyright (c) 2016, The CyanogenMod Project
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
    met:
@@ -13,7 +12,6 @@
     * Neither the name of The Linux Foundation nor the names of its
       contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
-
    THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
    WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
@@ -34,25 +32,38 @@
 #include "log.h"
 #include "util.h"
 
-static void import_kernel_nv(char *name, int for_emulator)
-{
-    char *value = strchr(name, '=');
-    int name_len = strlen(name);
-
-    if (value == 0) return;
-    *value++ = 0;
-    if (name_len == 0) return;
-
-    if (!strcmp(name,"oppo.rf_version")) {
-        property_set("ro.oppo.rf_version", value);
-    }
-    else if (!strcmp(name,"oppo.pcb_version")) {
-        property_set("ro.oppo.pcb_version", value);
-    }
-}
+#define ISMATCH(a,b)    (!strncmp(a,b,PROP_VALUE_MAX))
 
 void vendor_load_properties()
 {
-    import_kernel_cmdline(0, import_kernel_nv);
-}
+    char device[PROP_VALUE_MAX];
+    char platform[PROP_VALUE_MAX];
+    char rf_version[PROP_VALUE_MAX];
+    int rc;
 
+    rc = property_get("ro.board.platform", platform);
+    if (!rc || !ISMATCH(platform, ANDROID_TARGET))
+        return;
+
+    property_get("ro.boot.rf_version", rf_version);
+
+    if (strstr(rf_version, "101")) {
+        /* China */
+        property_set("ro.product.model", "ONE E1001");
+        property_set("ro.rf_version", "TDD_FDD_Ch_All");
+    } else if (strstr(rf_version, "102")) {
+        /* Asia/Europe */
+        property_set("ro.product.model", "ONE E1003");
+        property_set("ro.rf_version", "TDD_FDD_Eu");
+    } else if (strstr(rf_version, "103")){
+        /* America */
+        property_set("ro.product.model", "ONE E1005");
+        property_set("ro.rf_version", "TDD_FDD_Am");
+    } else if (strstr(rf_version, "107")){
+        /* China CTCC Version */
+        property_set("ro.product.model", "ONE E1000");
+        property_set("ro.rf_version", "TDD_FDD_ALL_OPTR");
+    }
+    property_get("ro.product.device", device);
+    INFO("Found rf_version : %s setting build properties for %s device\n", rf_version, device);
+}

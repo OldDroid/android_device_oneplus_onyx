@@ -141,7 +141,7 @@ on property:sys.usb.config=diag,diag_mdm,serial_hsic,serial_tty,rmnet_hsic,mass_
     start adbd
     setprop sys.usb.state ${sys.usb.config}
 
-#added some configs for support ptp and cdrom by Xinhua.Song 2014-05-10    
+#added some configs for support ptp and cdrom by Xinhua.Song 2014-05-10
 on property:sys.usb.config=ptp
     stop adbd
     write /sys/class/android_usb/android0/enable 0
@@ -180,7 +180,7 @@ on property:sys.usb.config=mtp,mass_storage,adb
     start adbd
     setprop sys.usb.state ${sys.usb.config}
 
-#add a config for support rndis, diag and adb, added by Xinhua.Song 2014-05-10 
+#add a config for support rndis, diag and adb, added by Xinhua.Song 2014-05-10
 on property:sys.usb.config=rndis,diag,adb
     stop adbd
     write /sys/class/android_usb/android0/enable 0
@@ -189,26 +189,6 @@ on property:sys.usb.config=rndis,diag,adb
     write /sys/class/android_usb/android0/idProduct 6775
     write /sys/class/android_usb/android0/f_diag/clients diag
     write /sys/class/android_usb/android0/functions rndis,diag,adb
-    write /sys/class/android_usb/android0/enable 1
-    start adbd
-    setprop sys.usb.state ${sys.usb.config}
-
-# USB midi configuration
-on property:sys.usb.config=midi
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/idVendor 05C6
-    write /sys/class/android_usb/android0/idProduct 6776
-    write /sys/class/android_usb/android0/functions ${sys.usb.config}
-    write /sys/class/android_usb/android0/enable 1
-    start adbd
-    setprop sys.usb.state ${sys.usb.config}
-
-# USB midi configuration, with adb
-on property:sys.usb.config=midi,adb
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/idVendor 05C6
-    write /sys/class/android_usb/android0/idProduct 6777
-    write /sys/class/android_usb/android0/functions ${sys.usb.config}
     write /sys/class/android_usb/android0/enable 1
     start adbd
     setprop sys.usb.state ${sys.usb.config}

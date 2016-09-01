@@ -19,26 +19,20 @@ PRODUCT_COPY_FILES := device/sample/etc/apns-full-conf.xml:system/etc/apns-conf.
 $(call inherit-product, $(SRC_TARGET_DIR)/product/aosp_base_telephony.mk)
 
 # Inherit from bacon device
-$(call inherit-product, device/oneplus/bacon/bacon.mk)
+$(call inherit-product, device/oneplus/onyx/onyx.mk)
 
-# Enhanced NFC
-#$(call inherit-product, vendor/cm/config/nfc_enhanced.mk)
-
-# Inherit some common CM stuff.
-#$(call inherit-product, vendor/cm/config/common_full_phone.mk)
-
-PRODUCT_NAME := aosp_bacon
-PRODUCT_DEVICE := bacon
+PRODUCT_NAME := aosp_onyx
+PRODUCT_DEVICE := onyx
 PRODUCT_MANUFACTURER := OnePlus
-PRODUCT_MODEL := A0001
+PRODUCT_MODEL := E1003
 
 PRODUCT_GMS_CLIENTID_BASE := android-oneplus
 
 PRODUCT_BRAND := oneplus
 TARGET_VENDOR := oneplus
-TARGET_VENDOR_PRODUCT_NAME := bacon
-TARGET_VENDOR_DEVICE_NAME := A0001
-PRODUCT_BUILD_PROP_OVERRIDES += TARGET_DEVICE=A0001 PRODUCT_NAME=bacon
+TARGET_VENDOR_PRODUCT_NAME := onyx
+TARGET_VENDOR_DEVICE_NAME := E1003
+PRODUCT_BUILD_PROP_OVERRIDES += TARGET_DEVICE=E1003 PRODUCT_NAME=onyx
 
 ## Use the latest approved GMS identifiers unless running a signed build
 ifneq ($(SIGN_BUILD),true)

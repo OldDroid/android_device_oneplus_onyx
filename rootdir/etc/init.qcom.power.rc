@@ -55,14 +55,14 @@ on enable-low-power
     chmod 664 /sys/devices/system/cpu/cpu2/online
     chmod 664 /sys/devices/system/cpu/cpu3/online
 
-    write /sys/module/msm_thermal/core_control/enabled 1
+    write /sys/module/msm_thermal/core_control/enabled 0
 
     write /sys/module/cpu_boost/parameters/boost_ms 20
     write /sys/module/cpu_boost/parameters/sync_threshold 1728000
     write /sys/module/cpu_boost/parameters/input_boost_freq 1497600
     write /sys/module/cpu_boost/parameters/input_boost_ms 40
 
-    write /sys/class/devfreq/qcom,cpubw.40/governor "cpubw_hwmon"
+    write /sys/class/devfreq/qcom,cpubw.41/governor "cpubw_hwmon"
     write /sys/class/kgsl/kgsl-3d0/devfreq/governor msm-adreno-tz
 
     write /dev/cpuctl/cpu.notify_on_migrate 1
@@ -95,7 +95,6 @@ on boot
     trigger enable-low-power
 
 on property:init.svc.recovery=running
-    write /sys/class/leds/button-backlight/brightness 255
     trigger enable-low-power
 
 on property:recovery.perf.mode=1

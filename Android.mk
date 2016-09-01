@@ -16,7 +16,7 @@
 
 LOCAL_PATH := $(call my-dir)
 
-ifneq ($(filter bacon,$(TARGET_DEVICE)),)
+ifeq ($(TARGET_DEVICE),onyx)
 
 include $(call all-subdir-makefiles,$(LOCAL_PATH))
 
@@ -27,7 +27,7 @@ MODEM_IMAGES := \
     modem.b06 modem.b07 modem.b08 modem.b09 modem.b10 modem.b11 \
     modem.b12 modem.b13 modem.b14 modem.b15 modem.b16 modem.b17 \
     modem.b18 modem.b19 modem.b20 modem.b21 modem.b22 modem.b23 \
-    modem.b24 modem.b25 modem.b26 modem.b27 modem.mdt
+    modem.b24 modem.b25 modem.mdt
 
 MODEM_SYMLINKS := $(addprefix $(TARGET_OUT_ETC)/firmware/,$(notdir $(MODEM_IMAGES)))
 $(MODEM_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
@@ -100,18 +100,6 @@ $(ISDB_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
 
 ALL_DEFAULT_INSTALLED_MODULES += $(ISDB_SYMLINKS)
 
-KM_IMAGES := \
-    keymaste.b00 keymaste.b01 keymaste.b02 keymaste.b03 keymaste.mdt
-
-KM_SYMLINKS := $(addprefix $(TARGET_OUT_ETC)/firmware/,$(notdir $(KM_IMAGES)))
-$(KM_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
-	@echo "Keymaster firmware link: $@"
-	@mkdir -p $(dir $@)
-	@rm -rf $@
-	$(hide) ln -sf /firmware/image/$(notdir $@) $@
-
-ALL_DEFAULT_INSTALLED_MODULES += $(KM_SYMLINKS)
-
 MC_IMAGES := \
     mc_v2.b00 mc_v2.b01 mc_v2.b02 mc_v2.b03 mc_v2.mdt
 
@@ -147,6 +135,18 @@ $(WV_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
 	$(hide) ln -sf /firmware/image/$(notdir $@) $@
 
 ALL_DEFAULT_INSTALLED_MODULES += $(WV_SYMLINKS)
+
+TQS_IMAGES := \
+    tqs.b00 tqs.b01 tqs.b02 tqs.b03 tqs.mdt
+
+TQS_SYMLINKS := $(addprefix $(TARGET_OUT_ETC)/firmware/,$(notdir $(TQS_IMAGES)))
+$(TQS_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
+	@echo "TQS firmware link: $@"
+	@mkdir -p $(dir $@)
+	@rm -rf $@
+	$(hide) ln -sf /firmware/image/$(notdir $@) $@
+
+ALL_DEFAULT_INSTALLED_MODULES += $(TQS_SYMLINKS)
 
 # Create links for audcal data files
 $(shell mkdir -p $(TARGET_OUT)/etc/firmware/wcd9320; \
